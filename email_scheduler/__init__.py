@@ -7,4 +7,5 @@ with open("email.config") as f:
         key, value = line.split("::")
         config[key] = value
 
+# Create App Instance #
 app = EmailScheduler(config)
