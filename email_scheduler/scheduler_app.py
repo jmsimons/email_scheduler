@@ -17,8 +17,16 @@ class EmailScheduler:
         except KeyboardInterrupt:
             print("EmailScheduler is shutting down, goodbye!")
     
-    def add_email_event(self, recipients, subject, message):
-        schedule.every().monday.at("10:01").do(self.send_email, recipients, subject, message)
+    def add_email_event(self, filename):
+        with open(f"messages/{filename}") as f:
+            line = f.readline().strip()
+            # print(line)
+            recipient = line.split("::")[1]
+            subject = f.readline().split("::")[1]
+            f.readline() # Burn line containing message::
+            message = f.read()
+            print(f"Scheduling Message:\nTo: {recipient}, Subject: {subject}\n{message}" )
+        schedule.every().monday.at("23:16").do(self.send_email, recipient, subject, message)
 
     def send_email(self, recipients, subject, message):
         with SMTP_SSL("smtp.gmail.com", 465) as smtp:
